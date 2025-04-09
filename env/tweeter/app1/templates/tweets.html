@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+ {% for i in tweets %}
+ <i>{{i.text}}</i><br>
+ <img src="{{i.photo.url}}" alt="">
+ {% endfor %}
+{% endblock content %}
