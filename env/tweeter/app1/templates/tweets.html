@@ -1,7 +1,47 @@
 {% extends "layout.html" %}
+{% load static %}
+
 {% block content %}
- {% for i in tweets %}
- <i>{{i.text}}</i><br>
- <img src="{{i.photo.url}}" alt="">
- {% endfor %}
-{% endblock content %}
+<a class="btn btn-success mb-3" href="{% url 'add' %}">+ Add Tweet</a>
+
+{% for i in tweets %}
+<div class="tweet-container" id="tweet-{{ i.id }}">
+  <div class="tweet-header">
+    <img src="{% if i.user.profile_pic %}{{ i.user.profile_pic.url }}{% else %}/static/default-profile.png{% endif %}" class="profile-pic" alt="User">
+    <div class="user-name">{{ i.user.username }}</div>
+  </div>
+  <div class="tweet-text">{{ i.text }}</div>
+  {% if i.photo %}
+    <img src="{{ i.photo.url }}" class="tweet-image" alt="Tweet image">
+  {% endif %}
+  <div class="tweet-time">{{ i.created_at|date:"M d, Y H:i" }}</div>
+
+  <button class="like-button" onclick="likeTweet({{ i.id }})">
+    ❤️ Like <span id="like-count-{{ i.id }}">{{ i.like_count }}</span>
+  </button>
+
+  {% if i.user == user %}
+     <a class="btn btn-primary" href="{% url "Edit" i.id %}">Update</a>
+     <a class="btn btn-danger" href="{% url "tweetDelete" i.id %}">Delete</a>
+
+     {% endif %}
+
+</div>
+{% endfor %}
+
+<script>
+  function likeTweet(tweetId) {
+    fetch(`/like/${tweetId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById(`like-count-${tweetId}`).innerText = data.like_count;
+    });
+  }
+</script>
+{% endblock %}
