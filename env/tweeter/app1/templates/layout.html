@@ -20,9 +20,6 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="logo">
         <h1>tweeter</h1>
-        <a href="+">profile</a>
-        <a href="+">notification</a>
-        <a href="+">storys</a>
 
 
       </div>
@@ -30,9 +27,7 @@
             {% if user.is_authenticated %}
             <form action="{% url 'logout' %}" method="post">
               {% csrf_token %}
-              <button class="btn-btn danger" type="submit">
-                logout
-              </button>
+              <button class="btn btn-primary mx-2 ml" type="submit">logout</button>
             </form>
             {% else %}
             <a class="btn btn-primary mx-2" href="{% url 'register' %}">register</a>
